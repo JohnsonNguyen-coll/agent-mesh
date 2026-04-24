@@ -19,6 +19,18 @@ contract _ArcBlocklistPrecompileStub {
     }
 }
 
+/// @dev Arc USDC also dispatches transfers through a chain precompile at 0x1800...0000.
+/// Foundry's local VM doesn't implement it, so we stub a minimal surface for simulation.
+contract _ArcTransferPrecompileStub {
+    function transfer(address, address, uint256) external pure returns (bool) {
+        return true;
+    }
+
+    function transferFrom(address, address, address, uint256) external pure returns (bool) {
+        return true;
+    }
+}
+
 /// @dev Arc Testnet demo:
 /// - deploy AgentRegistry + PaymentRouter + HashVerifier
 /// - register an agent
@@ -32,6 +44,7 @@ contract AgentMeshArcDemo is Script {
     // Arc Testnet USDC ERC-20 interface address (docs.arc.network reference)
     address constant ARC_TESTNET_USDC = 0x3600000000000000000000000000000000000000;
     address constant ARC_BLOCKLIST_PRECOMPILE = 0x1800000000000000000000000000000000000001;
+    address constant ARC_TRANSFER_PRECOMPILE = 0x1800000000000000000000000000000000000000;
 
     bytes32 constant EIP712_DOMAIN_TYPEHASH =
         keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
@@ -42,6 +55,7 @@ contract AgentMeshArcDemo is Script {
     function run() external {
         // Stub Arc blocklist precompile for local simulation (no effect on-chain).
         vm.etch(ARC_BLOCKLIST_PRECOMPILE, type(_ArcBlocklistPrecompileStub).runtimeCode);
+        vm.etch(ARC_TRANSFER_PRECOMPILE, type(_ArcTransferPrecompileStub).runtimeCode);
 
         uint256 pk = vm.envUint("PRIVATE_KEY");
         address caller = vm.addr(pk);
