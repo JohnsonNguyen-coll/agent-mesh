@@ -34,6 +34,7 @@ Requires Foundry.
 forge script script/AgentMeshArcDemo.s.sol:AgentMeshArcDemo \
   --rpc-url "$ARC_TESTNET_RPC_URL" \
   --private-key "$PRIVATE_KEY" \
-  --broadcast
+  --broadcast \
+  --skip-simulation
 ```
 

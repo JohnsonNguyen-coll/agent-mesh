@@ -28,13 +28,14 @@ contract AgentEscrow {
         _;
     }
 
+    /// @dev Accounting-only "escrow".
+    /// We record the task deposit, but we do NOT move funds into this contract at route time.
+    /// On Arc testnet, transferring USDC from a contract can revert unexpectedly; using
+    /// `transferFrom(payer, payout, amount)` at settlement avoids contract-as-sender transfers.
     function depositFrom(address token, address payer, bytes32 taskId, uint256 amount) external onlyRouter {
         require(deposits[taskId].payer == address(0), "DUP_TASK");
         require(amount > 0, "AMOUNT_ZERO");
         deposits[taskId] = Deposit({ payer: payer, token: token, amount: amount, released: false });
-
-        bool ok = IERC20(token).transferFrom(payer, address(this), amount);
-        require(ok, "TRANSFER_FROM_FAILED");
         emit Deposited(taskId, payer, token, amount);
     }
 
@@ -44,8 +45,8 @@ contract AgentEscrow {
         require(!d.released, "ALREADY_FINAL");
         d.released = true;
 
-        bool ok = IERC20(d.token).transfer(to, d.amount);
-        require(ok, "TRANSFER_FAILED");
+        bool ok = IERC20(d.token).transferFrom(d.payer, to, d.amount);
+        require(ok, "TRANSFER_FROM_FAILED");
         emit Released(taskId, to, d.amount);
     }
 
@@ -55,8 +56,7 @@ contract AgentEscrow {
         require(!d.released, "ALREADY_FINAL");
         d.released = true;
 
-        bool ok = IERC20(d.token).transfer(to, d.amount);
-        require(ok, "TRANSFER_FAILED");
+        // No token movement needed (since we never pulled funds in).
         emit Refunded(taskId, to, d.amount);
     }
 }
