@@ -1,9 +1,10 @@
 import React from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Grid, Cpu, Zap, Globe, BarChart, Hexagon, Terminal } from 'lucide-react';
+import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
+import { Grid, Cpu, Zap, Globe, BarChart, Hexagon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Pages
+import LandingPage from './pages/LandingPage';
 import Marketplace from './pages/Marketplace';
 import Orchestrate from './pages/Orchestrate';
 import LiveFeed from './pages/LiveFeed';
@@ -11,21 +12,21 @@ import DeployAgent from './pages/DeployAgent';
 import Analytics from './pages/Analytics';
 import AgentProfile from './pages/AgentProfile';
 
-const App = () => {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   return (
     <div className="app-layout">
       <nav className="sidebar">
-        <div className="logo-section">
+        <Link to="/" className="logo-section" style={{ textDecoration: 'none' }}>
           <div className="logo-icon">
             <Hexagon size={20} color="black" fill="black" />
           </div>
           <span className="logo-text">AGENT.MESH</span>
-        </div>
+        </Link>
 
         <div className="nav-links">
-          <NavLink to="/" icon={<Grid size={18} />} label="MARKETPLACE" active={location.pathname === '/'} />
+          <NavLink to="/marketplace" icon={<Grid size={18} />} label="MARKETPLACE" active={location.pathname === '/marketplace'} />
           <NavLink to="/orchestrate" icon={<Cpu size={18} />} label="ORCHESTRATE" active={location.pathname === '/orchestrate'} />
           <NavLink to="/live" icon={<Zap size={18} />} label="LIVE PROTOCOL" active={location.pathname === '/live'} />
           <NavLink to="/deploy" icon={<Globe size={18} />} label="DEPLOY NODE" active={location.pathname === '/deploy'} />
@@ -56,18 +57,27 @@ const App = () => {
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             style={{ width: '100%' }}
           >
-            <Routes location={location}>
-              <Route path="/" element={<Marketplace />} />
-              <Route path="/orchestrate" element={<Orchestrate />} />
-              <Route path="/live" element={<LiveFeed />} />
-              <Route path="/deploy" element={<DeployAgent />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/agent/:id" element={<AgentProfile />} />
-            </Routes>
+            {children}
           </motion.div>
         </AnimatePresence>
       </main>
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/marketplace" element={<DashboardLayout><Marketplace /></DashboardLayout>} />
+      <Route path="/orchestrate" element={<DashboardLayout><Orchestrate /></DashboardLayout>} />
+      <Route path="/live" element={<DashboardLayout><LiveFeed /></DashboardLayout>} />
+      <Route path="/deploy" element={<DashboardLayout><DeployAgent /></DashboardLayout>} />
+      <Route path="/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
+      <Route path="/agent/:id" element={<DashboardLayout><AgentProfile /></DashboardLayout>} />
+      {/* Fallback to marketplace if authenticated or landing if not - for now just redirect to landing */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 };
 
@@ -79,3 +89,4 @@ const NavLink = ({ to, icon, label, active }: { to: string, icon: any, label: st
 );
 
 export default App;
+
