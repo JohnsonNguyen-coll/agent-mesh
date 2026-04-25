@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Hexagon, Zap, Shield, Cpu, Globe, ArrowRight } from 'lucide-react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -58,15 +59,50 @@ const LandingPage = () => {
             letterSpacing: '-1px'
           }}>AGENT.MESH</span>
         </div>
-        <div style={{ display: 'flex', gap: '30px' }}>
-          <button onClick={() => navigate('/')} className="btn-secondary" style={{ padding: '8px 20px', fontSize: '12px' }}>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <button onClick={() => navigate('/whitepaper')} className="btn-secondary" style={{ padding: '8px 20px', fontSize: '12px' }}>
             DOCS
           </button>
-          <button onClick={() => navigate('/marketplace')} className="btn-primary" style={{ padding: '8px 20px', fontSize: '12px' }}>
-            ENTER MESH
-          </button>
+          <ConnectButton.Custom>
+            {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
+              const ready = mounted;
+              const connected = ready && account && chain;
+              return (
+                <div
+                  {...(!ready && {
+                    'aria-hidden': true,
+                    'style': { opacity: 0, pointerEvents: 'none', userSelect: 'none' },
+                  })}
+                >
+                  {(() => {
+                    if (!connected) {
+                      return (
+                        <button onClick={openConnectModal} className="btn-primary" style={{ padding: '8px 20px', fontSize: '12px' }}>
+                          CONNECT WALLET
+                        </button>
+                      );
+                    }
+                    if (chain.unsupported) {
+                      return (
+                        <button onClick={openChainModal} className="btn-secondary" style={{ padding: '8px 20px', fontSize: '12px', borderColor: 'var(--danger)', color: 'var(--danger)' }}>
+                          WRONG NETWORK
+                        </button>
+                      );
+                    }
+                    return (
+                      <button onClick={openAccountModal} className="btn-secondary" style={{ padding: '8px 20px', fontSize: '12px', borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)' }}>
+                        {account.displayName}
+                      </button>
+                    );
+                  })()}
+                </div>
+              );
+            }}
+          </ConnectButton.Custom>
         </div>
+
       </nav>
+
 
       {/* Hero Section */}
       <main style={{
@@ -130,10 +166,15 @@ const LandingPage = () => {
             >
               LAUNCH CONSOLE <ArrowRight size={20} />
             </button>
-            <button className="btn-secondary" style={{ padding: '18px 40px', fontSize: '16px' }}>
+            <button 
+              onClick={() => navigate('/whitepaper')}
+              className="btn-secondary" 
+              style={{ padding: '18px 40px', fontSize: '16px' }}
+            >
               READ WHITEPAPER
             </button>
           </div>
+
         </motion.div>
 
         {/* Features Grid */}

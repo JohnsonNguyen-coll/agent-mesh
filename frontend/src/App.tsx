@@ -11,6 +11,9 @@ import LiveFeed from './pages/LiveFeed';
 import DeployAgent from './pages/DeployAgent';
 import Analytics from './pages/Analytics';
 import AgentProfile from './pages/AgentProfile';
+import Whitepaper from './pages/Whitepaper';
+
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -25,7 +28,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <span className="logo-text">AGENT.MESH</span>
         </Link>
 
-        <div className="nav-links">
+        <div className="nav-links" style={{ marginBottom: '30px' }}>
           <NavLink to="/marketplace" icon={<Grid size={18} />} label="MARKETPLACE" active={location.pathname === '/marketplace'} />
           <NavLink to="/orchestrate" icon={<Cpu size={18} />} label="ORCHESTRATE" active={location.pathname === '/orchestrate'} />
           <NavLink to="/live" icon={<Zap size={18} />} label="LIVE PROTOCOL" active={location.pathname === '/live'} />
@@ -33,8 +36,49 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <NavLink to="/analytics" icon={<BarChart size={18} />} label="MESH ANALYTICS" active={location.pathname === '/analytics'} />
         </div>
 
-        <div style={{marginTop: 'auto'}}>
+        <div style={{ marginTop: 'auto', marginBottom: '20px' }}>
+          <ConnectButton.Custom>
+            {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
+              const ready = mounted;
+              const connected = ready && account && chain;
+              return (
+                <div
+                  {...(!ready && {
+                    'aria-hidden': true,
+                    'style': { opacity: 0, pointerEvents: 'none', userSelect: 'none' },
+                  })}
+                >
+                  {(() => {
+                    if (!connected) {
+                      return (
+                        <button onClick={openConnectModal} className="btn-primary" style={{ padding: '8px 16px', fontSize: '11px', width: '100%', justifyContent: 'center' }}>
+                          CONNECT WALLET
+                        </button>
+                      );
+                    }
+                    if (chain.unsupported) {
+                      return (
+                        <button onClick={openChainModal} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '11px', width: '100%', justifyContent: 'center', borderColor: 'var(--danger)', color: 'var(--danger)' }}>
+                          WRONG NETWORK
+                        </button>
+                      );
+                    }
+                    return (
+                      <button onClick={openAccountModal} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '11px', width: '100%', justifyContent: 'center', borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)' }}>
+                        {account.displayName}
+                      </button>
+                    );
+                  })()}
+                </div>
+              );
+            }}
+          </ConnectButton.Custom>
+        </div>
+
+        <div>
           <div className="card-solid" style={{padding: '20px', backgroundColor: 'rgba(0, 242, 255, 0.02)', borderStyle: 'dashed'}}>
+
+
             <div className="status-indicator">
               <div className="dot"></div>
               <span>NETWORK ONLINE</span>
@@ -75,7 +119,9 @@ const App = () => {
       <Route path="/deploy" element={<DashboardLayout><DeployAgent /></DashboardLayout>} />
       <Route path="/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
       <Route path="/agent/:id" element={<DashboardLayout><AgentProfile /></DashboardLayout>} />
+      <Route path="/whitepaper" element={<Whitepaper />} />
       {/* Fallback to marketplace if authenticated or landing if not - for now just redirect to landing */}
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
