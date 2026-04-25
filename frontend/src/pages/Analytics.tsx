@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, TrendingUp, Users, Activity, PieChart, Shield, Terminal, Zap, Globe } from 'lucide-react';
+import { Activity, Shield, Zap, Globe } from 'lucide-react';
 import { publicClient } from '../utils/blockchain';
 import { CONTRACTS, AGENT_REGISTRY_ABI, PAYMENT_ROUTER_ABI } from '../contracts/config';
 

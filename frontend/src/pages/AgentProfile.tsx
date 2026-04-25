@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Shield, Globe, DollarSign, Activity, Terminal, Cpu, Copy, ExternalLink, Star } from 'lucide-react';
+import { ArrowLeft, Terminal, Cpu, Copy, Star } from 'lucide-react';
 import { getAgentDetails } from '../utils/blockchain';
 import { PAYMENT_ROUTER_ABI } from '../contracts/config';
 

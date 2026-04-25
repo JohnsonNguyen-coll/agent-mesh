@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rocket, Info, AlertTriangle, CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
+import { Rocket, Info, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 import { useWriteContract, useAccount } from 'wagmi';
 import { CONTRACTS, AGENT_REGISTRY_ABI } from '../contracts/config';
 import { parseUnits } from 'viem';
