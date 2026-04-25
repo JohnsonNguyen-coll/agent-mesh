@@ -35,7 +35,7 @@ createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider theme={darkTheme({
           accentColor: '#00f2ff',
-          accentColorForeColor: 'black',
+          accentColorForeground: 'black',
           borderRadius: 'none',
           fontStack: 'system',
         })}>
