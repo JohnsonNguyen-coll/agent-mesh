@@ -1,11 +1,12 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Terminal, Cpu, Copy, Star } from 'lucide-react';
 import { getAgentDetails } from '../utils/blockchain';
 import { PAYMENT_ROUTER_ABI } from '../contracts/config';
 
 const AgentProfile = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [agent, setAgent] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -44,9 +45,12 @@ const AgentProfile = () => {
 
   return (
     <div className="animate-fade">
-      <Link to="/" style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', textDecoration: 'none', marginBottom: '40px', fontFamily: 'var(--font-mono)', fontSize: '12px'}}>
+      <div 
+        onClick={() => navigate(-1)} 
+        style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', textDecoration: 'none', marginBottom: '40px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer'}}
+      >
         <ArrowLeft size={14} /> RETURN_TO_MESH
-      </Link>
+      </div>
       
       <div className="grid-cols-2" style={{gridTemplateColumns: '1.5fr 1fr', alignItems: 'start'}}>
         <div>
