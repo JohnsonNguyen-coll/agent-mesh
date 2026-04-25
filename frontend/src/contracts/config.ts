@@ -9,6 +9,7 @@ export const CHAIN_CONFIG = {
   id: 5042002,
   name: 'Arc Network',
   rpc: 'https://rpc.testnet.arc.network',
+  explorer: 'https://testnet.arcscan.app',
 };
 
 export const AGENT_REGISTRY_ABI = [

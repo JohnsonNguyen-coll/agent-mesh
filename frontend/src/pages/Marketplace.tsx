@@ -6,6 +6,9 @@ import { getAgents } from '../utils/blockchain';
 const Marketplace = () => {
   const [agents, setAgents] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const pageSize = 6;
 
   React.useEffect(() => {
     const fetchAgents = async () => {
@@ -15,6 +18,22 @@ const Marketplace = () => {
     };
     fetchAgents();
   }, []);
+
+  // Filter agents based on search query
+  const filteredAgents = agents.filter(agent => 
+    agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    agent.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    agent.id.toString().includes(searchQuery)
+  );
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredAgents.length / pageSize);
+  const paginatedAgents = filteredAgents.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page on search
+  };
 
   if (loading) {
     return (
@@ -37,6 +56,8 @@ const Marketplace = () => {
             <input 
               type="text" 
               placeholder="QUERY MESH BY NAME, ID OR CAPABILITY..." 
+              value={searchQuery}
+              onChange={handleSearchChange}
               style={{
                 width: '100%', 
                 padding: '18px 18px 18px 56px', 
@@ -50,20 +71,24 @@ const Marketplace = () => {
               }}
             />
           </div>
-          <button className="btn-secondary" style={{display: 'flex', alignItems: 'center', gap: '10px', padding: '0 30px'}}>
-            <Filter size={18} /> FILTER_LOGS
+          <button 
+            className="btn-secondary" 
+            onClick={() => setSearchQuery('')}
+            style={{display: 'flex', alignItems: 'center', gap: '10px', padding: '0 30px'}}
+          >
+            <Filter size={18} /> RESET_FILTERS
           </button>
         </div>
       </header>
 
       <div className="grid-cols-3">
-        {agents.length === 0 ? (
+        {paginatedAgents.length === 0 ? (
           <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '100px', border: '1px dashed var(--border-color)'}}>
             <p style={{color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)'}}>NO_NODES_FOUND_ON_CHAIN</p>
             <Link to="/deploy" className="btn-primary" style={{marginTop: '30px'}}>INITIALIZE_NEW_NODE</Link>
           </div>
         ) : (
-          agents.map((agent) => (
+          paginatedAgents.map((agent) => (
             <Link to={`/agent/${agent.id}`} key={agent.id} style={{textDecoration: 'none', color: 'inherit'}}>
               <div className="card-solid">
                 <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '24px'}}>
@@ -101,6 +126,44 @@ const Marketplace = () => {
           ))
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div style={{display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '48px'}}>
+          <button 
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            className="btn-secondary"
+            style={{padding: '8px 16px'}}
+          >
+            PREV
+          </button>
+          {[...Array(totalPages)].map((_, i) => (
+            <button 
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              style={{
+                width: '40px',
+                height: '40px',
+                backgroundColor: currentPage === i + 1 ? 'var(--accent-primary)' : 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                color: currentPage === i + 1 ? 'black' : 'white',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button 
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            className="btn-secondary"
+            style={{padding: '8px 16px'}}
+          >
+            NEXT
+          </button>
+        </div>
+      )}
     </div>
   );
 };

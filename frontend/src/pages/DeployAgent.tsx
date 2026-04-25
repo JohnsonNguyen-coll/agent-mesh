@@ -1,7 +1,7 @@
 import React from 'react';
 import { Rocket, Info, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 import { useWriteContract, useAccount } from 'wagmi';
-import { CONTRACTS, AGENT_REGISTRY_ABI } from '../contracts/config';
+import { CONTRACTS, AGENT_REGISTRY_ABI, CHAIN_CONFIG } from '../contracts/config';
 import { parseUnits } from 'viem';
 
 const DeployAgent = () => {
@@ -112,7 +112,14 @@ const DeployAgent = () => {
               <CheckCircle2 size={20} />
               <div>
                 <p style={{fontWeight: 700}}>Deployment Successful!</p>
-                <p style={{fontSize: '12px'}}>TX: {hash?.slice(0,20)}...</p>
+                <a 
+                  href={`${CHAIN_CONFIG.explorer}/tx/${hash}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{fontSize: '12px', color: 'var(--success)', textDecoration: 'underline', cursor: 'pointer', fontFamily: 'var(--font-mono)'}}
+                >
+                  TX: {hash?.slice(0,20)}...
+                </a>
               </div>
             </div>
           )}
