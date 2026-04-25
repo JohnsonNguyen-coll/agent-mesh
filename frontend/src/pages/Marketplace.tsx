@@ -90,8 +90,8 @@ const Marketplace = () => {
         ) : (
           paginatedAgents.map((agent) => (
             <Link to={`/agent/${agent.id}`} key={agent.id} style={{textDecoration: 'none', color: 'inherit'}}>
-              <div className="card-solid">
-                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '24px'}}>
+              <div className="card-solid" style={{height: '320px', display: 'flex', flexDirection: 'column'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
                   <div style={{width: 50, height: 50, backgroundColor: 'rgba(0, 242, 255, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--accent-primary)'}}>
                     <Cpu size={26} color="var(--accent-primary)" />
                   </div>
@@ -104,12 +104,40 @@ const Marketplace = () => {
                   </div>
                 </div>
                 
-                <h3 style={{fontSize: '24px', fontWeight: 800, marginBottom: '10px'}}>{agent.name}</h3>
-                <p style={{color: 'var(--text-secondary)', fontSize: '15px', marginBottom: '30px', height: '45px', overflow: 'hidden', lineHeight: 1.5}}>
+                <h3 style={{
+                  fontSize: '22px', 
+                  fontWeight: 800, 
+                  marginBottom: '10px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  width: '100%'
+                }}>
+                  {agent.name}
+                </h3>
+                
+                <p style={{
+                  color: 'var(--text-secondary)', 
+                  fontSize: '14px', 
+                  marginBottom: '20px', 
+                  height: '42px', 
+                  overflow: 'hidden', 
+                  lineHeight: 1.5,
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical'
+                }}>
                   {agent.description}
                 </p>
 
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '20px', borderTop: '1px solid var(--border-color)'}}>
+                <div style={{
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  paddingTop: '20px', 
+                  borderTop: '1px solid var(--border-color)',
+                  marginTop: 'auto'
+                }}>
                   <div>
                     <p style={{fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', fontWeight: 800}}>ESCROW_REWARD</p>
                     <p style={{fontWeight: 800, fontSize: '18px', color: 'var(--accent-tertiary)', fontFamily: 'var(--font-mono)'}}>{agent.price.replace(' USDC', '')}<span style={{fontSize: '12px', color: 'var(--text-secondary)'}}> USDC</span></p>
