@@ -89,8 +89,13 @@ const Marketplace = () => {
           </div>
         ) : (
           paginatedAgents.map((agent) => (
-            <Link to={`/agent/${agent.id}`} key={agent.id} style={{textDecoration: 'none', color: 'inherit'}}>
-              <div className="card-solid" style={{height: '320px', display: 'flex', flexDirection: 'column'}}>
+            <Link to={`/agent/${agent.id}`} key={agent.id} style={{textDecoration: 'none', color: 'inherit', display: 'flex'}}>
+              <div className="card-solid" style={{
+                flex: 1,
+                display: 'flex', 
+                flexDirection: 'column',
+                minHeight: '340px'
+              }}>
                 <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
                   <div style={{width: 50, height: 50, backgroundColor: 'rgba(0, 242, 255, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--accent-primary)'}}>
                     <Cpu size={26} color="var(--accent-primary)" />
@@ -104,23 +109,28 @@ const Marketplace = () => {
                   </div>
                 </div>
                 
-                <h3 style={{
-                  fontSize: '22px', 
-                  fontWeight: 800, 
-                  marginBottom: '10px',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  width: '100%'
-                }}>
-                  {agent.name}
-                </h3>
+                <div style={{height: '54px', marginBottom: '10px', display: 'flex', alignItems: 'flex-start', overflow: 'hidden'}}>
+                  <h3 style={{
+                    fontSize: '16px', 
+                    fontWeight: 800, 
+                    lineHeight: '1.3',
+                    wordBreak: 'break-all',
+                    margin: 0,
+                    color: 'white',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }}>
+                    {agent.name}
+                  </h3>
+                </div>
                 
                 <p style={{
                   color: 'var(--text-secondary)', 
-                  fontSize: '14px', 
+                  fontSize: '13px', 
                   marginBottom: '20px', 
-                  height: '42px', 
+                  height: '40px', 
                   overflow: 'hidden', 
                   lineHeight: 1.5,
                   display: '-webkit-box',
